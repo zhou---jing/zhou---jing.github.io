@@ -1,13 +1,11 @@
 # Site settings
-title: Clean Blog
+title: 无愧过往  无畏将来
 header-img: img/home-bg.jpg
-email: your-email@yourdomain.com
-description: "Write your site description here. It will be used as your sites meta description as well!"
+email: zhou---jing.hotmail.com
+description: "记录自己的成长"
 baseurl: ""
-url: "http://yourdomain.com"
-twitter_username: SBootstrap
-github_username:  davidtmiller
-facebook_username:  IronSummitMedia
+url: "https://zhou---jing.github.io"
+github_username:  zhou---jing
 
 # Build settings
 markdown: kramdown

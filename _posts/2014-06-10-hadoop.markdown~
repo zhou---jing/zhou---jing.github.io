@@ -1,0 +1,63 @@
+---
+layout:     post
+title:      "Hadoop的起源思想"
+subtitle:   "关于Hadoop在Google中借鉴的技术思想"
+date:       2014-06-10 12:00:00
+author:     "zhou---jing"
+header-img: "img/post-bg-01.jpg"
+---
+
+<p>最近在看了下Hadoop，了解到Hadoop的起源的Lucene——一个实现全文搜索功能的开源软件，实现全文搜索功能在数据量不是很大的时候我们可以使用like进行数据库模糊查询，可是我们知道like的话则只能进行全文检索，这样的话如果对于大数据量则会是个灾难，此时的作者遇到和Google搜索引擎一样的困难——如何快速进行全文搜索。所幸的是，Google在几篇论文中向世界介绍了它的思想，不久之后，作者则根据Google的思想写出栏Hadoop。</p>
+
+<h2 class="section-heading">1:全文搜索遇到的问题</h2>
+<blockquote>
+	<h4 class="section-heading">1.1）大量网页如何存储</h4>
+	<h4 class="section-heading">1.2）全文搜索的搜索算法</h4>
+	<h4 class="section-heading">1.3）Page-Rank计算</h4>
+</blockquote>
+
+<h2 class="section-heading">2:Google的解决方案</h2>
+<h5 class="section-heading">2.1）大量网页如何存储</h5>
+<p>众所周知，Google的搜索肯定需要处理大量的网页数据，而这些网页的存储所耗费的资源是非常巨大的，而Google作为一家非常有思想的公司，他们的思想就是将这些文件利用集群进行存储，每个节点存储部分数据，达到蚂蚁搬象的效果，这就是GFS。</p>
+
+<h5 class="section-heading">2.2）全文搜索的搜索算法</h5>
+<p>对于大量网页的全文搜索，上面已经说到肯定不会使用Like进行查询，这时的Google则想出来了一个算法——倒排索引</p>
+<a href="#">
+    <img src="{{ site.baseurl }}/img/daopao_suoyin.png" alt="倒排索引">
+</a>
+<p>它们的思想就是拿到一个网页之后对网页内容进行分词，每个词就是一个特征项，每个网页存在多个特征项，而每个特征项则会存在一个或者多个网页，然后我们根据特征项查找所有包含此特征项的网页，而且也能找到特征项在哪个位置。下面是一个示例，DocID是网页ID，TF是特征项在网页中的位置。</p>
+<a href="#"><img src="{{ site.baseurl }}/img/daopai_suoyin2.png" alt="倒排索引"></a>
+
+<h5 class="section-heading">2.3）Page-Rank计算</h5>
+<a href="#">
+    <img src="{{ site.baseurl }}/img/page_rank1.png" alt="Page_Rank">
+</a>
+
+<p>搜索查找到哪些网页是我们所需要的，但是此时我们需要知道哪些网页是相对而言是符合我们需求的，所以这时涉及到一个网页价值的计算问题。Google是根据每个网页被指向的次数来计算价值的，举个例子来说，这里有4个网页 指向关系如下图所示：</p>
+<a href="#">
+    <img src="{{ site.baseurl }}/img/page_rank2.png" alt="Page_Rank">
+</a>
+
+<p>我们可以认为每个网页自身有价值为1，你指向了其他n的网页，则每个网页分得1/n的价值，所以此时的矩阵S为：</p>
+<a href="#">
+    <img src="{{ site.baseurl }}/img/page_rank3.png" alt="Page_Rank">
+</a>
+<p>取得了矩阵S我们就可以求得矩阵G了，而网页的价值向量是当q<next>=q<current>*G的时候，我们可以认为此时的向量q是价值向量了，而且Google工程师会给q设置一个默认值q0，利用q0可以计算q1.....这样可以一直迭代，直到q<next>和q<current>差不多的时候.下面的问题就是如何计算q了,我们知道此时的数据量肯定是很大的，没有任何一台计算机可以独立完成此时的任务，所以Google的工程师们利用分而治之的思想——Map-Reduce。
+现在我们来看下上式的计算过程：</p>
+<a href="#">
+    <img src="{{ site.baseurl }}/img/page_rank4.png" alt="Page_Rank">
+</a>
+<p>我们可以选择对G进行矩阵转换得到的矩阵(行列交换)：</p>
+<a href="#">
+    <img src="{{ site.baseurl }}/img/page_rank5.png" alt="Page_Rank">
+</a>
+<p>然后对S进行求G，得到矩阵：</p>
+<a href="#">
+    <img src="{{ site.baseurl }}/img/page_rank6.png" alt="Page_Rank">
+</a>
+<p>然后令q0（这个是默认值）:</p>
+<a href="#">
+    <img src="{{ site.baseurl }}/img/page-rank7.png" alt="Page_Rank">
+</a>
+<p>二者相乘得到新的矩阵 如果该矩阵和q0相差很大，则继续迭代，如果不是，则可以退出，得到该结果。那么Google是如何进行对大量网页进行矩阵乘法的工作呢？他们的想法是让每个节点负责部分计算，比如说节点1负责第一、二行，得到q1中前两个的值，节点2负责第三、四行，得到q1中后两个值，然后将结果同意发到一个节点，得到q1，然后再次进行迭代；上面的分任务就是Map过程，而将结果发到节点进行整合则为Reduce。</p>
+<p>总的来说，Hadoop的很多思想都是从Google借鉴的，比如说BigTable（倒排索引中对关键字的以及网页的指向关系的存储），Map—Reduce就是Page-Rank算法中的思想，Hdfs则是GFS的改版。</p>

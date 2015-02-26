@@ -94,9 +94,9 @@
 
 <h2 class="section-heading">1:全文搜索遇到的问题</h2>
 <blockquote>
-	<h4 class="section-heading">1.1）大量网页如何存储</h4>
-	<h4 class="section-heading">1.2）全文搜索的搜索算法</h4>
-	<h4 class="section-heading">1.3）Page-Rank计算</h4>
+	<p>1.1）大量网页如何存储</p>
+	<p>1.2）全文搜索的搜索算法</p>
+	<p>1.3）Page-Rank计算</p>
 </blockquote>
 
 <h2 class="section-heading">2:Google的解决方案</h2>
@@ -130,19 +130,14 @@
 <a href="#">
     <img src="/img/hadoop_orignal/page_rank4.png" alt="Page_Rank" />
 </a>
-<p>我们可以选择对G进行矩阵转换得到的矩阵(行列交换)：</p>
-<a href="#">
-    <img src="/img/hadoop_orignal/page_rank5.png" alt="Page_Rank" />
-</a>
-<p>然后对S进行求G，得到矩阵：</p>
-<a href="#">
-    <img src="/img/hadoop_orignal/page_rank6.png" alt="Page_Rank" />
-</a>
-<p>然后令q0（这个是默认值）:</p>
+
+<p>我们取得了矩阵G之后，然后令q0（这个是默认值，可以根据需要进行调整）：</p>
 <a href="#">
     <img src="/img/hadoop_orignal/page-rank7.png" alt="Page_Rank" />
 </a>
-<p>二者相乘得到新的矩阵 如果该矩阵和q0相差很大，则继续迭代，如果不是，则可以退出，得到该结果。那么Google是如何进行对大量网页进行矩阵乘法的工作呢？他们的想法是让每个节点负责部分计算，比如说节点1负责第一、二行，得到q1中前两个的值，节点2负责第三、四行，得到q1中后两个值，然后将结果同意发到一个节点，得到q1，然后再次进行迭代；上面的分任务就是Map过程，而将结果发到节点进行整合则为Reduce。</p>
+<p>二者相乘得到新的矩阵 ，然后再次进行迭代直到迭代多次（这个也是可以进行调整的），得到该结果。</p>
+<blockquote>那么Google是如何进行对大量网页进行矩阵乘法的工作呢？</blockquote>
+<p>他们的想法是让每个节点负责部分计算，比如说节点1负责第一、二列，那么此列和q0中第一、二个数进行相乘得到一个4*2的向量，代表的意思是1、2号网页对1、2、3、4号网页的PR分别贡献多少，节点2负责第三、四列，那么此列和q0中第三、四个数进行相乘得到一个4*2的向量 ，代表的意思是3、4号网页对1、2、3、4号网页的PR分别贡献多少，然后将结果同意发到一个节点，得到一个4*4的向量，对每行进行想加就是q1，然后再次进行迭代；上面的分任务就是Map过程，而将结果发到节点进行整合则为Reduce。</p>
 <p>总的来说，Hadoop的很多思想都是从Google借鉴的，比如说BigTable（倒排索引中对关键字的以及网页的指向关系的存储），Map—Reduce就是Page-Rank算法中的思想，Hdfs则是GFS的改版。</p>
 </current></next></current></next></p>
 
@@ -153,17 +148,32 @@
                     
                     
                     <li class="next">
-                        <a href="/2014/07/01/sql-injection/" data-toggle="tooltip" data-placement="top" title="关于SQL注入的类比">Next Post &rarr;</a>
+                        <a href="/2014/07/01/sql-injection/" data-toggle="tooltip" data-placement="top" title="关于SQL注入的类比">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>
 
             </div>
         </div>
+	<!-- 多说评论框 start -->
+   	<!--<div class="ds-thread col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1" data-thread-key=/2014/06/10/hadoop-orignal data-title=Hadoop的起源思想 data-url="zhou---jing.github.io/2014/06/10/hadoop-orignal/"></div>-->
+    	<!-- 多说评论框 end -->
     </div>
 </article>
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+	var duoshuoQuery = {short_name:"zhou---jing"};
+	    (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	    })();
+</script>
+<!-- 多说公共JS代码 end -->
 
-<hr>
 
 
     <!-- Footer -->

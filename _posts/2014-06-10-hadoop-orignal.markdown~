@@ -11,9 +11,9 @@ header-img: "img/post-bg-01.jpg"
 
 <h2 class="section-heading">1:全文搜索遇到的问题</h2>
 <blockquote>
-	<p>1.1）大量网页如何存储</p>
-	<p>1.2）全文搜索的搜索算法</p>
-	<p>1.3）Page-Rank计算</p>
+	1.1）大量网页如何存储
+	1.2）全文搜索的搜索算法
+	1.3）Page-Rank计算
 </blockquote>
 
 <h2 class="section-heading">2:Google的解决方案</h2>

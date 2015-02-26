@@ -5,8 +5,8 @@
     <description>无愧过往  无畏将来</description>
     <link>https://zhou---jing.github.io/</link>
     <atom:link href="https://zhou---jing.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 25 Feb 2015 14:43:53 +0800</pubDate>
-    <lastBuildDate>Wed, 25 Feb 2015 14:43:53 +0800</lastBuildDate>
+    <pubDate>Thu, 26 Feb 2015 10:45:02 +0800</pubDate>
+    <lastBuildDate>Thu, 26 Feb 2015 10:45:02 +0800</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
@@ -203,17 +203,17 @@
 &lt;p&gt;SQL注入的最根本的原因就是数据和指令混合在一起了，那么对于预防来说，我们就可以尽可能地将指令和数据进行分离开来。&lt;/p&gt;
 &lt;h5 class=&quot;section-heading&quot;&gt;2.1)：对输入数据进行格式以及类型验证&lt;/h5&gt;
 
-&lt;p&gt;对于一些以及确定了格式以及类型的数据输入，我们必须进行格式验证以及类型验证，总的来说就是；&lt;/p&gt;
+&lt;p&gt;对于一些以及确定了格式以及类型的数据输入，我们必须进行格式验证以及类型验证，总的来说就是：&lt;/p&gt;
 
 &lt;blockquote&gt;只要是有固定格式的变量，在SQL语句执行前，应该严格按照固定格式去检查，确保变量是我们预想的格式。&lt;/blockquote&gt;
 
 &lt;p&gt;不过很多时候我们可能需要输入评论、搜索这些的话 ，则需要过滤了。&lt;/p&gt;
 
-&lt;h5 class=&quot;section-heading&quot;&gt;2.2)：过滤字符或者转义字符&lt;/h5&gt;
-&lt;p&gt;对于某些输入来说，过滤掉一些关键字是有可能的，比如说“or”和“‘’”这些，但是有些时候这些方法是不可行的（查找一个博客网站中搜索sql注入内容中“or”）。&lt;/p&gt;
+&lt;h5 class=&quot;section-heading&quot;&gt;2.2)：过滤字符&lt;/h5&gt;
+&lt;p&gt;对于某些输入来说，过滤掉一些关键字是有可能的，比如说“or”和“‘’”这些，但是有些时候这些方法是不可行的（查找一个博客网站中关于SQL注入的文章，则会样的话则不能进行“or”的过滤了）。&lt;/p&gt;
 
 &lt;h5 class=&quot;section-heading&quot;&gt;2.3)：参数化查询&lt;/h5&gt;
-&lt;p&gt;要说参数化查询，我们可以想象一下它的原理就是将数据在编译之前是用“？”（MYSQL环境）占位符来代替的，然后执行之前我们给这条语句传递栏参数，但是这个参数并不能改变该SQL的语意，此时如果有指令也只能作为参数了。&lt;/p&gt;
+&lt;p&gt;要说参数化查询，我们可以想象一下它的原理就是将数据在编译之前是用“？”（MYSQL环境）占位符来代替的，然后执行之前我们给这条语句传递了参数，但是这个参数并不能改变该SQL的语意，此时如果有指令也只能作为参数了。&lt;/p&gt;
 
 &lt;p&gt;下面就举例说明：&lt;/p&gt;
 
@@ -232,9 +232,9 @@
 
 &lt;h2 class=&quot;section-heading&quot;&gt;1:全文搜索遇到的问题&lt;/h2&gt;
 &lt;blockquote&gt;
-	&lt;h4 class=&quot;section-heading&quot;&gt;1.1）大量网页如何存储&lt;/h4&gt;
-	&lt;h4 class=&quot;section-heading&quot;&gt;1.2）全文搜索的搜索算法&lt;/h4&gt;
-	&lt;h4 class=&quot;section-heading&quot;&gt;1.3）Page-Rank计算&lt;/h4&gt;
+	&lt;p&gt;1.1）大量网页如何存储&lt;/p&gt;
+	&lt;p&gt;1.2）全文搜索的搜索算法&lt;/p&gt;
+	&lt;p&gt;1.3）Page-Rank计算&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;h2 class=&quot;section-heading&quot;&gt;2:Google的解决方案&lt;/h2&gt;
@@ -268,19 +268,14 @@
 &lt;a href=&quot;#&quot;&gt;
     &lt;img src=&quot;/img/hadoop_orignal/page_rank4.png&quot; alt=&quot;Page_Rank&quot; /&gt;
 &lt;/a&gt;
-&lt;p&gt;我们可以选择对G进行矩阵转换得到的矩阵(行列交换)：&lt;/p&gt;
-&lt;a href=&quot;#&quot;&gt;
-    &lt;img src=&quot;/img/hadoop_orignal/page_rank5.png&quot; alt=&quot;Page_Rank&quot; /&gt;
-&lt;/a&gt;
-&lt;p&gt;然后对S进行求G，得到矩阵：&lt;/p&gt;
-&lt;a href=&quot;#&quot;&gt;
-    &lt;img src=&quot;/img/hadoop_orignal/page_rank6.png&quot; alt=&quot;Page_Rank&quot; /&gt;
-&lt;/a&gt;
-&lt;p&gt;然后令q0（这个是默认值）:&lt;/p&gt;
+
+&lt;p&gt;我们取得了矩阵G之后，然后令q0（这个是默认值，可以根据需要进行调整）：&lt;/p&gt;
 &lt;a href=&quot;#&quot;&gt;
     &lt;img src=&quot;/img/hadoop_orignal/page-rank7.png&quot; alt=&quot;Page_Rank&quot; /&gt;
 &lt;/a&gt;
-&lt;p&gt;二者相乘得到新的矩阵 如果该矩阵和q0相差很大，则继续迭代，如果不是，则可以退出，得到该结果。那么Google是如何进行对大量网页进行矩阵乘法的工作呢？他们的想法是让每个节点负责部分计算，比如说节点1负责第一、二行，得到q1中前两个的值，节点2负责第三、四行，得到q1中后两个值，然后将结果同意发到一个节点，得到q1，然后再次进行迭代；上面的分任务就是Map过程，而将结果发到节点进行整合则为Reduce。&lt;/p&gt;
+&lt;p&gt;二者相乘得到新的矩阵 ，然后再次进行迭代直到迭代多次（这个也是可以进行调整的），得到该结果。&lt;/p&gt;
+&lt;blockquote&gt;那么Google是如何进行对大量网页进行矩阵乘法的工作呢？&lt;/blockquote&gt;
+&lt;p&gt;他们的想法是让每个节点负责部分计算，比如说节点1负责第一、二列，那么此列和q0中第一、二个数进行相乘得到一个4*2的向量，代表的意思是1、2号网页对1、2、3、4号网页的PR分别贡献多少，节点2负责第三、四列，那么此列和q0中第三、四个数进行相乘得到一个4*2的向量 ，代表的意思是3、4号网页对1、2、3、4号网页的PR分别贡献多少，然后将结果同意发到一个节点，得到一个4*4的向量，对每行进行想加就是q1，然后再次进行迭代；上面的分任务就是Map过程，而将结果发到节点进行整合则为Reduce。&lt;/p&gt;
 &lt;p&gt;总的来说，Hadoop的很多思想都是从Google借鉴的，比如说BigTable（倒排索引中对关键字的以及网页的指向关系的存储），Map—Reduce就是Page-Rank算法中的思想，Hdfs则是GFS的改版。&lt;/p&gt;
 &lt;/current&gt;&lt;/next&gt;&lt;/current&gt;&lt;/next&gt;&lt;/p&gt;
 </description>

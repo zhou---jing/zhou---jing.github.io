@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="无愧过往  无畏将来">
 
-    <title>I believe every human has a finite number of heartbeats. I don't intend to waste any of mine. - zhoujing的博客</title>
+    <title>JAVA多线程 - zhoujing的博客</title>
 
-    <link rel="canonical" href="https://zhou---jing.github.io/2014/09/18/i-believe/">
+    <link rel="canonical" href="https://zhou---jing.github.io/2014/08/24/thread-states/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -68,14 +68,16 @@
 
 
     <!-- Post Header -->
-<header class="intro-header" style="background-image: url('/img/post-bg-05.jpg')">
+<header class="intro-header" style="background-image: url('/img/post-bg-04.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.</h1>
+                    <h1>JAVA多线程</h1>
                     
-                    <span class="meta">Posted by Start Bootstrap on September 18, 2014</span>
+                    <h2 class="subheading">多线程的线程状态</h2>
+                    
+                    <span class="meta">Posted by zhou---jing on August 24, 2014</span>
                 </div>
             </div>
         </div>
@@ -88,40 +90,43 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<p>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman's earth, if free men make it, will be truly round: a globe in practice, not in theory.</p>
-
-<p>Science cuts two ways, of course; its products can be used for both good and evil. But there's no turning back from science. The early warnings about technological dangers also come from science.</p>
-
-<p>What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.</p>
-
-<p>A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That's how I felt seeing the Earth for the first time. I could not help but love and cherish her.</p>
-
-<p>For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.</p>
-
-<h2 class="section-heading">The Final Frontier</h2>
-
-<p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
-
-<p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
-
-<blockquote>The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.</blockquote>
-
-<p>Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.</p>
-
-<h2 class="section-heading">Reaching for the Stars</h2>
-
-<p>As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.</p>
+				<p>多线程调度分为分时调度和抢占式调度，JVM线程调度采用抢占式调度方式，即根据线程的优先级来获取CPU的使用权（优先级只是概率上的区别）。</p>
 
 <p><a href="#">
-    <img src="/img/post-sample-image.jpg" alt="Post Sample Image" />
-</a>
-<span class="caption text-muted">To go places and do things that have never been done before – that’s what living is all about.</span></p>
+    <img src="/img/thread_state/thread-state1.png" alt="线程状态" />
+</a></p>
 
-<p>Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.</p>
+<p>yield：暂停当前的线程，即让出cpu并且此时当前线程变为可执行状态，它会让jvm线程调度器再次调度一次（而不是网上有些人所说的）。</p>
 
-<p>As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.</p>
+<p><a href="#">
+    <img src="/img/thread_state/thread-state2.png" alt="线程状态" />
+</a></p>
 
-<p>Placeholder text by <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.</p>
+<p>下面来通过实例来进行证明：</p>
+
+<p><a href="#">
+    <img src="/img/thread_state/thread-state3.png" alt="线程状态" />
+</a></p>
+
+<p>我们设置t2的优先级比t1的优先级低，那么如果按照上述所说的，在调用了yield方法之后，只允许相同优先级的线程执行，那么在t2调用一次yield之后并不能调度到t1（因为优先级的问题），那么不应该存在线程2到线程1的转换（除了线程2执行完成后），但是看结果：</p>
+
+<p><a href="#">
+    <img src="/img/thread_state/thread-state4.png" alt="线程状态" />
+</a></p>
+
+<p>则验证上述所说的是错误的。</p>
+
+<p>join：在当前调用该方法的线程执行完成之后，才能继续下面代码的执行。这样的方式可以实现线程的简单同步。</p>
+
+<p><a href="#">
+    <img src="/img/thread_state/thread-state5.png" alt="线程状态" />
+</a></p>
+
+<p><a href="#">
+    <img src="/img/thread_state/thread-state6.png" alt="线程状态" />
+</a></p>
+
+<p>当然我们还看到了join超时，其实意思就是“过了多少时间，你线程没有执行完，我就不等你了”，调用的api是join(long time)。</p>
 
 
                 <hr>
@@ -129,12 +134,12 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2014/08/24/science-has-not-yet-mastered-prophecy/" data-toggle="tooltip" data-placement="top" title="Science has not yet mastered prophecy">&larr; 上一篇</a>
+                        <a href="/2014/07/08/thread-begin/" data-toggle="tooltip" data-placement="top" title="JAVA多线程">&larr; 上一篇</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/2014/09/24/man-must-explore/" data-toggle="tooltip" data-placement="top" title="Man must explore, and this is exploration at its greatest">下一篇 &rarr;</a>
+                        <a href="/2014/09/01/thread-producerandconsumer/" data-toggle="tooltip" data-placement="top" title="JAVA多线程">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>
@@ -142,7 +147,7 @@
             </div>
         </div>
 	<!-- 多说评论框 start -->
-   	<!--<div class="ds-thread col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1" data-thread-key=/2014/09/18/i-believe data-title=I believe every human has a finite number of heartbeats. I don't intend to waste any of mine. data-url="zhou---jing.github.io/2014/09/18/i-believe/"></div>-->
+   	<!--<div class="ds-thread col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1" data-thread-key=/2014/08/24/thread-states data-title=JAVA多线程 data-url="zhou---jing.github.io/2014/08/24/thread-states/"></div>-->
     	<!-- 多说评论框 end -->
     </div>
 </article>

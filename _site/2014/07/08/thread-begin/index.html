@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="无愧过往  无畏将来">
 
-    <title>Science has not yet mastered prophecy - zhoujing的博客</title>
+    <title>JAVA多线程 - zhoujing的博客</title>
 
-    <link rel="canonical" href="https://zhou---jing.github.io/2014/08/24/science-has-not-yet-mastered-prophecy/">
+    <link rel="canonical" href="https://zhou---jing.github.io/2014/07/08/thread-begin/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -68,16 +68,16 @@
 
 
     <!-- Post Header -->
-<header class="intro-header" style="background-image: url('/img/post-bg-04.jpg')">
+<header class="intro-header" style="background-image: url('/img/post-bg-03.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>Science has not yet mastered prophecy</h1>
+                    <h1>JAVA多线程</h1>
                     
-                    <h2 class="subheading">We predict too much for the next year and yet far too little for the next ten.</h2>
+                    <h2 class="subheading">多线程的基础</h2>
                     
-                    <span class="meta">Posted by Start Bootstrap on August 24, 2014</span>
+                    <span class="meta">Posted by zhou---jing on July 8, 2014</span>
                 </div>
             </div>
         </div>
@@ -90,40 +90,38 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<p>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman's earth, if free men make it, will be truly round: a globe in practice, not in theory.</p>
+				<h2 class="section-heading">1):认识多任务、多进程、单线程、多线程</h2>
+<p>以前的DOS系统是单任务的，就是说计算机只能在同一时刻只能做一件事情（比如说听歌的时候不能修copy文件），而如今的操作系统都是多任务操作系统了，每个应用应用程序对应一个任务，而多任务的实现方式也是利用调度来实现多处理器的分配，事实上处理器在某一时刻只会给一件任务提供服务，而一个任务可以开启多个进程，并分别分配资源，而一个进程也可以创建多个线程，比如说JVM的进程，而线程的调度则是JVM的调度机制来实现的。</p>
 
-<p>Science cuts two ways, of course; its products can be used for both good and evil. But there's no turning back from science. The early warnings about technological dangers also come from science.</p>
+<blockquote>实际上，操作的系统的多进程实现了多任务并发执行，程序的多线程实现了进程的并发执行。</blockquote>
 
-<p>What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.</p>
+<h2 class="section-heading">2):java中的多线程</h2>
+<h4 class="section-heading">2.1):java线程的分类</h4>
+<p>java中线程分为两类：用户线程和守护线程，当然java对于它们之间的转换提供了api的，就是setDaemon，它允许用户设置线程为守护线程，注意的是线程设置必须在线程start之前执行，不然会报错。那么守护线程和用户线程之间存在什么区别呢？</p>
 
-<p>A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That's how I felt seeing the Earth for the first time. I could not help but love and cherish her.</p>
+<blockquote>
+<p>a）：用户线程的离开会对jvm关闭存在影响，而守护线程不会，就是说如果用户线程都执行完成了（不论此时是否还有守护线程），jvm则会关闭。
+</p>
+<p>b）：在daemon线程中创建的线程也是daemon的，而在用户线程创建的线程则是用户线程。那么守护线程的作用是什么？我们可以把它类比于Android中的service，它主要的功能就是为其他线程提供服务，比如说垃圾回收线程是一个守护线程，它的作用就是处理其他线程产生的垃圾。
+</p>
+</blockquote>
 
-<p>For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.</p>
+<h4 class="section-heading">2.2):java线程的创建</h4>
+<p>在java中存在三种方式创建线程：</p>
+<blockquote>
+<p>a）：继承Thread类</p>
+<p>b）：实现Runnable接口</p>
+<p>c）：实现Callable接口</p>
+</blockquote>
 
-<h2 class="section-heading">The Final Frontier</h2>
+<p>三者的区别在于：</p>
+<blockquote>
+<p>a）：a无法继承其他类</p>
+<p>b）：b和c适合多个线程处理同一资源</p>
+<p>c）：c存在线程返回结果以及抛出异常</p>
+</blockquote>
 
-<p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
-
-<p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
-
-<blockquote>The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.</blockquote>
-
-<p>Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.</p>
-
-<h2 class="section-heading">Reaching for the Stars</h2>
-
-<p>As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.</p>
-
-<p><a href="#">
-    <img src="/img/post-sample-image.jpg" alt="Post Sample Image" />
-</a>
-<span class="caption text-muted">To go places and do things that have never been done before – that’s what living is all about.</span></p>
-
-<p>Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.</p>
-
-<p>As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.</p>
-
-<p>Placeholder text by <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.</p>
+<p>线程的优先级：线程创建的优先级默认是和创建该线程的优先级一样（包括守护线程）,还真是验证了那句谚语“龙生龙，凤生凤，老鼠的儿子会打洞”</p>
 
 
                 <hr>
@@ -131,12 +129,12 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2014/07/08/failure-is-not-an-option/" data-toggle="tooltip" data-placement="top" title="Failure is not an option">&larr; 上一篇</a>
+                        <a href="/2014/07/01/sql-injection/" data-toggle="tooltip" data-placement="top" title="关于SQL注入的类比">&larr; 上一篇</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/2014/09/18/i-believe/" data-toggle="tooltip" data-placement="top" title="I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.">下一篇 &rarr;</a>
+                        <a href="/2014/08/24/thread-states/" data-toggle="tooltip" data-placement="top" title="JAVA多线程">下一篇 &rarr;</a>
                     </li>
                     
                 </ul>
@@ -144,7 +142,7 @@
             </div>
         </div>
 	<!-- 多说评论框 start -->
-   	<!--<div class="ds-thread col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1" data-thread-key=/2014/08/24/science-has-not-yet-mastered-prophecy data-title=Science has not yet mastered prophecy data-url="zhou---jing.github.io/2014/08/24/science-has-not-yet-mastered-prophecy/"></div>-->
+   	<!--<div class="ds-thread col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1" data-thread-key=/2014/07/08/thread-begin data-title=JAVA多线程 data-url="zhou---jing.github.io/2014/07/08/thread-begin/"></div>-->
     	<!-- 多说评论框 end -->
     </div>
 </article>

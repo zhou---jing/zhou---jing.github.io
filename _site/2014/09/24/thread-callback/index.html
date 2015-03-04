@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="无愧过往  无畏将来">
 
-    <title>Failure is not an option - zhoujing的博客</title>
+    <title>JAVA多线程 - zhoujing的博客</title>
 
-    <link rel="canonical" href="https://zhou---jing.github.io/2014/07/08/failure-is-not-an-option/">
+    <link rel="canonical" href="https://zhou---jing.github.io/2014/09/24/thread-callback/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -68,16 +68,16 @@
 
 
     <!-- Post Header -->
-<header class="intro-header" style="background-image: url('/img/post-bg-03.jpg')">
+<header class="intro-header" style="background-image: url('/img/post-bg-06.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    <h1>Failure is not an option</h1>
+                    <h1>JAVA多线程</h1>
                     
-                    <h2 class="subheading">Many say exploration is part of our destiny, but it’s actually our duty to future generations.</h2>
+                    <h2 class="subheading">Java线程间通信-异步回调的实现方式</h2>
                     
-                    <span class="meta">Posted by Start Bootstrap on July 8, 2014</span>
+                    <span class="meta">Posted by zhou---jing on September 24, 2014</span>
                 </div>
             </div>
         </div>
@@ -90,40 +90,30 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-				<p>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman's earth, if free men make it, will be truly round: a globe in practice, not in theory.</p>
+				<p>回调函数的实现方式其实就是利用的线程间的通讯，一般的模式是存在两个线程，一个主线程以及一个子线程，子线程完成操作后再执行定义的回调函数。而根据不同的场景我们可以对回调函数实现方式进行简单分类:</p>
 
-<p>Science cuts two ways, of course; its products can be used for both good and evil. But there's no turning back from science. The early warnings about technological dangers also come from science.</p>
+<blockquote>
+<p>a）:同一时刻只有一个实例需要进行回调处理</p>
+<p>b）:同一时刻只有多个实例需要进行回调处理</p>
+</blockquote>
 
-<p>What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.</p>
+<p>下面我们看下例子：</p>
+<p><a href="#">
+    <img src="/img/thread_callback/thread-callback1.png" alt="回调函数" />
+</a></p>
 
-<p>A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That's how I felt seeing the Earth for the first time. I could not help but love and cherish her.</p>
-
-<p>For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.</p>
-
-<h2 class="section-heading">The Final Frontier</h2>
-
-<p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
-
-<p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
-
-<blockquote>The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.</blockquote>
-
-<p>Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.</p>
-
-<h2 class="section-heading">Reaching for the Stars</h2>
-
-<p>As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.</p>
+<p>而此时的思想就是通过一个子线程执行异步操作，然后调用已经实现回调接口的方法，从而达到回调。那么如果存在多个实例想要关注此业务呢？我们当然可以类似于上面通过开启多个子线程来实现，但是这样的话对于资源的浪费是很大的（也不说此时的业务的一致性（即每个子线程关注的是同一个业务，但是资源都是新开辟的，因为都是新开的线程）），其实此时的解决方法很简单，看上面的描述的话就是一个“一”和“多”的区别，“一”是用单个对象来保存的，那么“多”我们就可以使用数组或者什么的来进行存储就可以了。</p>
 
 <p><a href="#">
-    <img src="/img/post-sample-image.jpg" alt="Post Sample Image" />
-</a>
-<span class="caption text-muted">To go places and do things that have never been done before – that’s what living is all about.</span></p>
+    <img src="/img/thread_callback/thread-callback2.png" alt="回调函数" />
+</a></p>
 
-<p>Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.</p>
+<p>其实多个实例需要回调也就是加上了个List进行存储而已，当然这种方式也可以满足一个实例进行回调的情况，只是觉得写起来有点大材小用了。但是这样会存在一个小问题，就是我们不能每时每刻添加异步回调任务，其实解决这个问题很简单，我们如果需要每时每刻都可以添加任务，则需要让子线程一直循环。</p>
 
-<p>As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.</p>
-
-<p>Placeholder text by <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.</p>
+<p><a href="#">
+    <img src="/img/thread_callback/thread-callback3.png" alt="回调函数" />
+</a></p>
+<p>总结来说，其实很多地方的回调都是使用的这样一种方式，比如Ajax的回调、Android的消息机制，这些或多或少都会使用到这样的一种方式。</p>
 
 
                 <hr>
@@ -131,20 +121,16 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2014/07/01/sql-injection/" data-toggle="tooltip" data-placement="top" title="关于SQL注入的类比">&larr; 上一篇</a>
+                        <a href="/2014/09/18/thread-synchronization/" data-toggle="tooltip" data-placement="top" title="JAVA多线程">&larr; 上一篇</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/2014/08/24/science-has-not-yet-mastered-prophecy/" data-toggle="tooltip" data-placement="top" title="Science has not yet mastered prophecy">下一篇 &rarr;</a>
-                    </li>
                     
                 </ul>
 
             </div>
         </div>
 	<!-- 多说评论框 start -->
-   	<!--<div class="ds-thread col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1" data-thread-key=/2014/07/08/failure-is-not-an-option data-title=Failure is not an option data-url="zhou---jing.github.io/2014/07/08/failure-is-not-an-option/"></div>-->
+   	<!--<div class="ds-thread col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1" data-thread-key=/2014/09/24/thread-callback data-title=JAVA多线程 data-url="zhou---jing.github.io/2014/09/24/thread-callback/"></div>-->
     	<!-- 多说评论框 end -->
     </div>
 </article>

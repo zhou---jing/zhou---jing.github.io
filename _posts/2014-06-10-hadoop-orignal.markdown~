@@ -7,20 +7,20 @@ author:     "zhou---jing"
 header-img: "img/post-bg-01.jpg"
 ---
 
-<p>最近在看了下Hadoop，了解到Hadoop的起源的Lucene——一个实现全文搜索功能的开源软件，实现全文搜索功能在数据量不是很大的时候我们可以使用like进行数据库模糊查询，可是我们知道like的话则只能进行全文检索，这样的话如果对于大数据量则会是个灾难，此时的作者遇到和Google搜索引擎一样的困难——如何快速进行全文搜索。所幸的是，Google在几篇论文中向世界介绍了它的思想，不久之后，作者则根据Google的思想写出栏Hadoop。</p>
+<p>最近在看了下Hadoop，了解到Hadoop的起源Lucene——一个实现全文搜索功能的开源项目在实现此项目功能时候所遇到的一些问题，实现全文搜索功能在数据量不是很大的时候我们可以使用like进行数据库模糊查询，可是我们知道like的话则只能进行全文检索而不能利用索引，这样的话如果对于大数据量则会是个灾难，此时的作者遇到和Google搜索引擎一样的困难——如何快速进行全文搜索。所幸的是，Google在几篇论文中向世界介绍了它的思想，不久之后，作者花费了两年时间根据Google的思想完成了该项目。</p>
 
 <h2 class="section-heading">1:全文搜索遇到的问题</h2>
 <blockquote>
-	1.1）大量网页如何存储
-	1.2）全文搜索的搜索算法
-	1.3）Page-Rank计算
+	<p>1.1）大量网页如何存储</p>
+	<p>1.2）全文搜索的搜索算法</p>
+	<p>1.3）Page-Rank计算</p>
 </blockquote>
 
 <h2 class="section-heading">2:Google的解决方案</h2>
-<h5 class="section-heading">2.1）大量网页如何存储</h5>
+<h4 class="section-heading">2.1）大量网页如何存储</h4>
 <p>众所周知，Google的搜索肯定需要处理大量的网页数据，而这些网页的存储所耗费的资源是非常巨大的，而Google作为一家非常有思想的公司，他们的思想就是将这些文件利用集群进行存储，每个节点存储部分数据，达到蚂蚁搬象的效果，这就是GFS。</p>
 
-<h5 class="section-heading">2.2）全文搜索的搜索算法</h5>
+<h4 class="section-heading">2.2）全文搜索的搜索算法</h4>
 <p>对于大量网页的全文搜索，上面已经说到肯定不会使用Like进行查询，这时的Google则想出来了一个算法——倒排索引</p>
 <a href="#">
     <img src="{{ site.baseurl }}/img/hadoop_orignal/daopao_suoyin.png" alt="倒排索引">
@@ -28,7 +28,7 @@ header-img: "img/post-bg-01.jpg"
 <p>它们的思想就是拿到一个网页之后对网页内容进行分词，每个词就是一个特征项，每个网页存在多个特征项，而每个特征项则会存在一个或者多个网页，然后我们根据特征项查找所有包含此特征项的网页，而且也能找到特征项在哪个位置。下面是一个示例，DocID是网页ID，TF是特征项在网页中的位置。</p>
 <a href="#"><img src="{{ site.baseurl }}/img/hadoop_orignal/daopai_suoyin2.png" alt="倒排索引"></a>
 
-<h5 class="section-heading">2.3）Page-Rank计算</h5>
+<h4 class="section-heading">2.3）Page-Rank计算</h4>
 <a href="#">
     <img src="{{ site.baseurl }}/img/hadoop_orignal/page_rank1.png" alt="Page_Rank">
 </a>
@@ -55,4 +55,4 @@ header-img: "img/post-bg-01.jpg"
 <p>二者相乘得到新的矩阵 ，然后再次进行迭代直到迭代多次（这个也是可以进行调整的），得到该结果。</p>
 <blockquote>那么Google是如何进行对大量网页进行矩阵乘法的工作呢？</blockquote>
 <p>他们的想法是让每个节点负责部分计算，比如说节点1负责第一、二列，那么此列和q0中第一、二个数进行相乘得到一个4*2的向量，代表的意思是1、2号网页对1、2、3、4号网页的PR分别贡献多少，节点2负责第三、四列，那么此列和q0中第三、四个数进行相乘得到一个4*2的向量 ，代表的意思是3、4号网页对1、2、3、4号网页的PR分别贡献多少，然后将结果同意发到一个节点，得到一个4*4的向量，对每行进行想加就是q1，然后再次进行迭代；上面的分任务就是Map过程，而将结果发到节点进行整合则为Reduce。</p>
-<p>总的来说，Hadoop的很多思想都是从Google借鉴的，比如说BigTable（倒排索引中对关键字的以及网页的指向关系的存储），Map—Reduce就是Page-Rank算法中的思想，Hdfs则是GFS的改版。</p>
+<p>总的来说，Hadoop的很多思想都是从Google借鉴的，比如说BigTable（倒排索引中对关键字的以及网页的指向关系的存储），Map—Reduce就是Page-Rank算法中的思想，Hdfs则是GFS的山寨版。</p>

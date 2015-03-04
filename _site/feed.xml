@@ -5,182 +5,290 @@
     <description>无愧过往  无畏将来</description>
     <link>https://zhou---jing.github.io/</link>
     <atom:link href="https://zhou---jing.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 26 Feb 2015 10:45:02 +0800</pubDate>
-    <lastBuildDate>Thu, 26 Feb 2015 10:45:02 +0800</lastBuildDate>
+    <pubDate>Wed, 04 Mar 2015 17:31:36 +0800</pubDate>
+    <lastBuildDate>Wed, 04 Mar 2015 17:31:36 +0800</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
-        <title>Man must explore, and this is exploration at its greatest</title>
-        <description>&lt;p&gt;Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.&lt;/p&gt;
+        <title>JAVA多线程</title>
+        <description>&lt;p&gt;回调函数的实现方式其实就是利用的线程间的通讯，一般的模式是存在两个线程，一个主线程以及一个子线程，子线程完成操作后再执行定义的回调函数。而根据不同的场景我们可以对回调函数实现方式进行简单分类:&lt;/p&gt;
 
-&lt;p&gt;Science cuts two ways, of course; its products can be used for both good and evil. But there&#39;s no turning back from science. The early warnings about technological dangers also come from science.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;a）:同一时刻只有一个实例需要进行回调处理&lt;/p&gt;
+&lt;p&gt;b）:同一时刻只有多个实例需要进行回调处理&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.&lt;/p&gt;
+&lt;p&gt;下面我们看下例子：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_callback/thread-callback1.png&quot; alt=&quot;回调函数&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That&#39;s how I felt seeing the Earth for the first time. I could not help but love and cherish her.&lt;/p&gt;
-
-&lt;p&gt;For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.&lt;/p&gt;
-
-&lt;h2 class=&quot;section-heading&quot;&gt;The Final Frontier&lt;/h2&gt;
-
-&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
-
-&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
-
-&lt;blockquote&gt;The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.&lt;/blockquote&gt;
-
-&lt;p&gt;Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.&lt;/p&gt;
-
-&lt;h2 class=&quot;section-heading&quot;&gt;Reaching for the Stars&lt;/h2&gt;
-
-&lt;p&gt;As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.&lt;/p&gt;
+&lt;p&gt;而此时的思想就是通过一个子线程执行异步操作，然后调用已经实现回调接口的方法，从而达到回调。那么如果存在多个实例想要关注此业务呢？我们当然可以类似于上面通过开启多个子线程来实现，但是这样的话对于资源的浪费是很大的（也不说此时的业务的一致性（即每个子线程关注的是同一个业务，但是资源都是新开辟的，因为都是新开的线程）），其实此时的解决方法很简单，看上面的描述的话就是一个“一”和“多”的区别，“一”是用单个对象来保存的，那么“多”我们就可以使用数组或者什么的来进行存储就可以了。&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;#&quot;&gt;
-    &lt;img src=&quot;/img/post-sample-image.jpg&quot; alt=&quot;Post Sample Image&quot; /&gt;
-&lt;/a&gt;
-&lt;span class=&quot;caption text-muted&quot;&gt;To go places and do things that have never been done before – that’s what living is all about.&lt;/span&gt;&lt;/p&gt;
+    &lt;img src=&quot;/img/thread_callback/thread-callback2.png&quot; alt=&quot;回调函数&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.&lt;/p&gt;
+&lt;p&gt;其实多个实例需要回调也就是加上了个List进行存储而已，当然这种方式也可以满足一个实例进行回调的情况，只是觉得写起来有点大材小用了。但是这样会存在一个小问题，就是我们不能每时每刻添加异步回调任务，其实解决这个问题很简单，我们如果需要每时每刻都可以添加任务，则需要让子线程一直循环。&lt;/p&gt;
 
-&lt;p&gt;As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.&lt;/p&gt;
-
-&lt;p&gt;Placeholder text by &lt;a href=&quot;http://spaceipsum.com/&quot;&gt;Space Ipsum&lt;/a&gt;. Photographs by &lt;a href=&quot;https://www.flickr.com/photos/nasacommons/&quot;&gt;NASA on The Commons&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_callback/thread-callback3.png&quot; alt=&quot;回调函数&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;总结来说，其实很多地方的回调都是使用的这样一种方式，比如Ajax的回调、Android的消息机制，这些或多或少都会使用到这样的一种方式。&lt;/p&gt;
 </description>
         <pubDate>Wed, 24 Sep 2014 20:00:00 +0800</pubDate>
-        <link>https://zhou---jing.github.io/2014/09/24/man-must-explore/</link>
-        <guid isPermaLink="true">https://zhou---jing.github.io/2014/09/24/man-must-explore/</guid>
+        <link>https://zhou---jing.github.io/2014/09/24/thread-callback/</link>
+        <guid isPermaLink="true">https://zhou---jing.github.io/2014/09/24/thread-callback/</guid>
         
         
       </item>
     
       <item>
-        <title>I believe every human has a finite number of heartbeats. I don&#39;t intend to waste any of mine.</title>
-        <description>&lt;p&gt;Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.&lt;/p&gt;
+        <title>JAVA多线程</title>
+        <description>&lt;p&gt;线程同步的作用就是为了共享资源，在java中实现线程同步的方式有两种。&lt;/p&gt;
 
-&lt;p&gt;Science cuts two ways, of course; its products can be used for both good and evil. But there&#39;s no turning back from science. The early warnings about technological dangers also come from science.&lt;/p&gt;
+&lt;h2 class=&quot;section-heading&quot;&gt;1):线程的同步方式&lt;/h2&gt;
 
-&lt;p&gt;What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;a)：加锁机制&lt;/p&gt;
+&lt;p&gt;b）：Volatile关键字&lt;/p&gt;
+&lt;p&gt;c）：信号量&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That&#39;s how I felt seeing the Earth for the first time. I could not help but love and cherish her.&lt;/p&gt;
+&lt;h4 class=&quot;section-heading&quot;&gt;1.1):加锁机制&lt;/h4&gt;
+&lt;h5 class=&quot;section-heading&quot;&gt;1.1.1):synchronized&lt;/h5&gt;
+&lt;p&gt;对于同步方法来说，不论是实例方法还是静态方法，加的锁都是在对象上加的，其他访问该方法的线程必须获取得到该对象的锁，而同步代码块的作用范围更小，在执行完同步代码块之后将锁释放，也就是说在同步代码块之前的代码不是同步的，多个线程可以访问。&lt;/p&gt;
 
-&lt;p&gt;For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.&lt;/p&gt;
+&lt;h5 class=&quot;section-heading&quot;&gt;1.1.2):java5之后提供的锁对象&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_synchronization/thread-synchronization1.png&quot; alt=&quot;线程同步&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_synchronization/thread-synchronization2.png&quot; alt=&quot;线程同步&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 class=&quot;section-heading&quot;&gt;The Final Frontier&lt;/h2&gt;
-
-&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
-
-&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
-
-&lt;blockquote&gt;The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.&lt;/blockquote&gt;
-
-&lt;p&gt;Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.&lt;/p&gt;
-
-&lt;h2 class=&quot;section-heading&quot;&gt;Reaching for the Stars&lt;/h2&gt;
-
-&lt;p&gt;As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.&lt;/p&gt;
+&lt;p&gt;而ReadLock以及WriteLock则是Reentranteadriteock的内部类；&lt;/p&gt;
+&lt;p&gt;ReentrantLock：可重入锁，简单来说就是同一个线程在获取该锁之后如果线程再次获取该锁这是可以的，但是如果是不可重入锁的话，则会造成死锁（不过现在没有找到不可重入的锁示例），可重入锁的实现方式就是为每个锁记录当前锁的持有线程以及计数器，当某一线程请求成功后，JVM会记下锁的持有线程，并且将计数器置为1；此时其它线程请求该锁，则必须等待；而该持有锁的线程如果再次请求这个锁，就可以再次拿到这个锁，同时计数器会递增；当线程退出同步代码块时，计数器会递减，如果计数器为0，则释放该锁。 而相对的则有不可重入锁，它在再次申请锁的时候会导致死锁，因为它以及占着资源而且还需要申请资源，但是申请的资源已经被自己占着了，下面来看下示例：&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;#&quot;&gt;
-    &lt;img src=&quot;/img/post-sample-image.jpg&quot; alt=&quot;Post Sample Image&quot; /&gt;
+    &lt;img src=&quot;/img/thread_synchronization/thread-synchronization3.png&quot; alt=&quot;线程同步&quot; /&gt;
 &lt;/a&gt;
-&lt;span class=&quot;caption text-muted&quot;&gt;To go places and do things that have never been done before – that’s what living is all about.&lt;/span&gt;&lt;/p&gt;
+&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_synchronization/thread-synchronization4.png&quot; alt=&quot;线程同步&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.&lt;/p&gt;
+&lt;p&gt;注意其中的while(isLocked)循环，它又被叫做“自旋锁”。当isLocked为true时，调用lock()的线程在wait()调用上阻塞等待。为防止该线程没有收到notify()调用也从wait()中返回（也称作虚假唤醒）， 这个线程会重新去检查isLocked条件以决定当前是否可以安全地继续执行还是需要重新保持等待，而不是认为线程被唤醒了就可以安全地继续执行了。如果 isLocked为false，当前线程会退出while(isLocked)循环，并将isLocked设回true，让其它正在调用lock()方法 的线程能够在Lock实例上加锁。&lt;/p&gt;
+&lt;p&gt;那么我们如何修改该锁，而可以把它变为可重用性呢？分析上面可以知道，主要的问题在于“自旋锁”让申请资源的线程等待，并且在上面我们已经知道了可重入锁的实现原理，那么简单更改锁就可以实现此效果了。&lt;/p&gt;
 
-&lt;p&gt;As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_synchronization/thread-synchronization5.png&quot; alt=&quot;线程同步&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Placeholder text by &lt;a href=&quot;http://spaceipsum.com/&quot;&gt;Space Ipsum&lt;/a&gt;. Photographs by &lt;a href=&quot;https://www.flickr.com/photos/nasacommons/&quot;&gt;NASA on The Commons&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;ReadLock：读锁是共享锁，即几个线程可以共享该锁；&lt;/p&gt;
+&lt;p&gt;WriteLock：写锁是排它锁，即只有一个线程可以获取该锁；&lt;/p&gt;
+
+&lt;h4 class=&quot;section-heading&quot;&gt;1.2):Volatile&lt;/h4&gt;
+&lt;p&gt;而对于Volatile关键字来说，它的作用是保证每次读取该关键字修饰的变量的值都是从主存中读取，所以它能保证每次读取的变量值都是最新的，但是不保证是同步的。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_synchronization/thread-synchronization6.png&quot; alt=&quot;线程同步&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;一般来说，处理变量都包括从主存读——copy变量副本保存在本线程——使用变量——写回主存，而Volatile关键字的变量每次访问的时候都是从主存读取过来的，它们之间的区别就在于线程在访问一般变量时候只是从主存读取一次，而Volatile关键字的变量则是读取多次，个人感觉Volatile关键字的变量和引用变量相似。&lt;/p&gt;
+
+&lt;h4 class=&quot;section-heading&quot;&gt;1.3):信号量&lt;/h4&gt;
+
+&lt;p&gt;信号量在一定情况下（当许可数量为1个线程的时候）也可以达到同步的作用，也可达到共享资源的目的，下面我们来看下关于信号量的介绍；它的介绍如下：&lt;/p&gt;
+
+&lt;blockquote&gt;执行操作时可以首先获得许可【semaphore.acquire();】，并在使用后释放许可 【semaphore.release();】。如果没有许可，那么acquire方法将会一直阻塞直到有许可（或者直到被终端或者操作超时）。&lt;/blockquote&gt;
+
+&lt;p&gt;由上面定义我们可以看到信号量的作用：可以用来控制同时访问某个特定资源的操作数量，或者某个操作的数量，简单来说，它可以控制资源的访问数量但是不能控制资源的数量。&lt;/p&gt;
+
+&lt;p&gt;下面来看下例子，这个例子是在生产者-消费者基础更改，添加需求为：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;a）：每次只能最多两个消费者进行消费或者等待消费（等待生产，仓库库存为空）&lt;/p&gt;
+&lt;p&gt;b）：每次只能最多三个生产者进行生产或者等待生产（等待消费，仓库是满的）&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_synchronization/thread-synchronization7.png&quot; alt=&quot;线程同步&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_synchronization/thread-synchronization8.png&quot; alt=&quot;线程同步&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 class=&quot;section-heading&quot;&gt;3):死锁&lt;/h2&gt;
+
+&lt;h4 class=&quot;section-heading&quot;&gt;3.1):死锁的介绍&lt;/h4&gt;
+
+&lt;p&gt;对象加锁的方式可以使得线程之前访问资源是同步的，但是有的时候加锁的顺序将会带来错误，就比如我们常常看见的死锁问题。&lt;/p&gt;
+
+&lt;blockquote&gt;简单来说，死锁的问题就是我占用着资源并且还要请求你的资源，但是你占用着自己的资源并且还需要我的资源，从而造成了一种循环等待的情形，这样就造成栏死锁。&lt;/blockquote&gt;
+
+&lt;p&gt;根据上面描述，我们可以找到死锁产生的四个条件:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;a）：循环等待（你等我 我等你）&lt;/p&gt;
+&lt;p&gt;b）：互斥条件（我和你共同竞争同一资源）&lt;/p&gt;
+&lt;p&gt;c）：不可抢占条件（你和我的资源只能自己释放而不能你进行抢占我的资源）&lt;/p&gt;
+&lt;p&gt;d）：占有且申请条件（竞争的资源需要申请，并且自己已经占有部分资源而且还需要申请新的资源）&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;下面我们来看下死锁的例子：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_synchronization/thread-synchronization9.png&quot; alt=&quot;线程同步&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_synchronization/thread-synchronization10.png&quot; alt=&quot;线程同步&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 class=&quot;section-heading&quot;&gt;3.2):死锁的预防&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;a）：可以选择在每个线程中让申请资源的顺序是一样的，如刚才的例子来说，可以选择把两个线程中的申请资源顺序都是t1,t2;&lt;/p&gt;
+&lt;p&gt;b）：将竞争的资源进行包装，所以需要用到其中资源的必须现申请该包装的锁，如刚才的例子，可以选择把t1和t2共同组成一个资源，则不论申请t1和t2的时候都需对该资源加锁。&lt;/p&gt;
+&lt;/blockquote&gt;
 </description>
         <pubDate>Thu, 18 Sep 2014 20:00:00 +0800</pubDate>
-        <link>https://zhou---jing.github.io/2014/09/18/i-believe/</link>
-        <guid isPermaLink="true">https://zhou---jing.github.io/2014/09/18/i-believe/</guid>
+        <link>https://zhou---jing.github.io/2014/09/18/thread-synchronization/</link>
+        <guid isPermaLink="true">https://zhou---jing.github.io/2014/09/18/thread-synchronization/</guid>
         
         
       </item>
     
       <item>
-        <title>Science has not yet mastered prophecy</title>
-        <description>&lt;p&gt;Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.&lt;/p&gt;
+        <title>JAVA多线程</title>
+        <description>&lt;p&gt;这种模型在现实生活中比较常见的模型，下面我们可以来看看这种模型的实现；此模型的需求是：&lt;/p&gt;
 
-&lt;p&gt;Science cuts two ways, of course; its products can be used for both good and evil. But there&#39;s no turning back from science. The early warnings about technological dangers also come from science.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;a）：消费者必须在仓库中有产品的时候才能进行消费&lt;/p&gt;
+&lt;p&gt;b）：生产者在仓库中没有产品的时候才能被告知进行生产&lt;/p&gt;
+&lt;p&gt;c）：生产者在仓库满的时候则停止生产&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.&lt;/p&gt;
-
-&lt;p&gt;A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That&#39;s how I felt seeing the Earth for the first time. I could not help but love and cherish her.&lt;/p&gt;
-
-&lt;p&gt;For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.&lt;/p&gt;
-
-&lt;h2 class=&quot;section-heading&quot;&gt;The Final Frontier&lt;/h2&gt;
-
-&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
-
-&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
-
-&lt;blockquote&gt;The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.&lt;/blockquote&gt;
-
-&lt;p&gt;Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.&lt;/p&gt;
-
-&lt;h2 class=&quot;section-heading&quot;&gt;Reaching for the Stars&lt;/h2&gt;
-
-&lt;p&gt;As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.&lt;/p&gt;
+&lt;p&gt;分析之后，我们知道生产者和消费者是两个独立的线程，它们分别进行消费和生产操作，对于仓库提供出来的接口对产品进行生产或者消费的api是需要进行同步的，因为这是共享资源。示例代码如下：&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;#&quot;&gt;
-    &lt;img src=&quot;/img/post-sample-image.jpg&quot; alt=&quot;Post Sample Image&quot; /&gt;
+    &lt;img src=&quot;/img/thread_producerandconsumer/thread-producerandconsumer1.png&quot; alt=&quot;生产者——消费者模型&quot; /&gt;
 &lt;/a&gt;
-&lt;span class=&quot;caption text-muted&quot;&gt;To go places and do things that have never been done before – that’s what living is all about.&lt;/span&gt;&lt;/p&gt;
+&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_producerandconsumer/thread-producerandconsumer2.png&quot; alt=&quot;生产者——消费者模型&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_producerandconsumer/thread-producerandconsumer3.png&quot; alt=&quot;生产者——消费者模型&quot; /&gt;
+&lt;/a&gt;
+&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_producerandconsumer/thread-producerandconsumer4.png&quot; alt=&quot;生产者——消费者模型&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.&lt;/p&gt;
+&lt;p&gt;我们可以看到这个的实现方式是通过wait和notifyAll或者notify来实现的，它们给实现了一种可以类似通知的效果，直到某一条件满足才通知线程资源有了，可以来进行争夺了。但是又会存在一个问题，我们对于通知的接收方是所有在该对象上加锁的线程或者是其中一个，但是我们对于线程的“精确”通知是无法做到的，不过从java5之后条件变量可以轻松做到。我们先来看下条件变量的定义：&lt;/p&gt;
 
-&lt;p&gt;As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.&lt;/p&gt;
+&lt;blockquote&gt;条件变量就是表示条件的一种变量。但是必须说明，这里的条件是没有实际含义的，仅仅是个标记而已，并且条件的含义往往通过代码来赋予其含义&lt;/blockquote&gt;
 
-&lt;p&gt;Placeholder text by &lt;a href=&quot;http://spaceipsum.com/&quot;&gt;Space Ipsum&lt;/a&gt;. Photographs by &lt;a href=&quot;https://www.flickr.com/photos/nasacommons/&quot;&gt;NASA on The Commons&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;下面来看下例子吧，就拿上面的生产者-消费者来说，我们需要做的是在满仓的情况下只通知消费者消费，而在空仓的情况下只通知生产者生产，而不是上面例子中的所有线程。示例代码如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_producerandconsumer/thread-producerandconsumer5.png&quot; alt=&quot;生产者——消费者模型&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;总结来说一句：await、wait、notify、notifyll、signal、singnalll都必须在获取了对象锁之后才能使用，不然会报错。就如下面这样来写就会出现问题。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_producerandconsumer/thread-producerandconsumer6.png&quot; alt=&quot;生产者——消费者模型&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Mon, 01 Sep 2014 17:23:00 +0800</pubDate>
+        <link>https://zhou---jing.github.io/2014/09/01/thread-producerandconsumer/</link>
+        <guid isPermaLink="true">https://zhou---jing.github.io/2014/09/01/thread-producerandconsumer/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>JAVA多线程</title>
+        <description>&lt;p&gt;多线程调度分为分时调度和抢占式调度，JVM线程调度采用抢占式调度方式，即根据线程的优先级来获取CPU的使用权（优先级只是概率上的区别）。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_state/thread-state1.png&quot; alt=&quot;线程状态&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;yield：暂停当前的线程，即让出cpu并且此时当前线程变为可执行状态，它会让jvm线程调度器再次调度一次（而不是网上有些人所说的）。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_state/thread-state2.png&quot; alt=&quot;线程状态&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;下面来通过实例来进行证明：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_state/thread-state3.png&quot; alt=&quot;线程状态&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;我们设置t2的优先级比t1的优先级低，那么如果按照上述所说的，在调用了yield方法之后，只允许相同优先级的线程执行，那么在t2调用一次yield之后并不能调度到t1（因为优先级的问题），那么不应该存在线程2到线程1的转换（除了线程2执行完成后），但是看结果：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_state/thread-state4.png&quot; alt=&quot;线程状态&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;则验证上述所说的是错误的。&lt;/p&gt;
+
+&lt;p&gt;join：在当前调用该方法的线程执行完成之后，才能继续下面代码的执行。这样的方式可以实现线程的简单同步。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_state/thread-state5.png&quot; alt=&quot;线程状态&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
+    &lt;img src=&quot;/img/thread_state/thread-state6.png&quot; alt=&quot;线程状态&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;当然我们还看到了join超时，其实意思就是“过了多少时间，你线程没有执行完，我就不等你了”，调用的api是join(long time)。&lt;/p&gt;
 </description>
         <pubDate>Sun, 24 Aug 2014 20:00:00 +0800</pubDate>
-        <link>https://zhou---jing.github.io/2014/08/24/science-has-not-yet-mastered-prophecy/</link>
-        <guid isPermaLink="true">https://zhou---jing.github.io/2014/08/24/science-has-not-yet-mastered-prophecy/</guid>
+        <link>https://zhou---jing.github.io/2014/08/24/thread-states/</link>
+        <guid isPermaLink="true">https://zhou---jing.github.io/2014/08/24/thread-states/</guid>
         
         
       </item>
     
       <item>
-        <title>Failure is not an option</title>
-        <description>&lt;p&gt;Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman&#39;s earth, if free men make it, will be truly round: a globe in practice, not in theory.&lt;/p&gt;
+        <title>JAVA多线程</title>
+        <description>&lt;h2 class=&quot;section-heading&quot;&gt;1):认识多任务、多进程、单线程、多线程&lt;/h2&gt;
+&lt;p&gt;以前的DOS系统是单任务的，就是说计算机只能在同一时刻只能做一件事情（比如说听歌的时候不能修copy文件），而如今的操作系统都是多任务操作系统了，每个应用应用程序对应一个任务，而多任务的实现方式也是利用调度来实现多处理器的分配，事实上处理器在某一时刻只会给一件任务提供服务，而一个任务可以开启多个进程，并分别分配资源，而一个进程也可以创建多个线程，比如说JVM的进程，而线程的调度则是JVM的调度机制来实现的。&lt;/p&gt;
 
-&lt;p&gt;Science cuts two ways, of course; its products can be used for both good and evil. But there&#39;s no turning back from science. The early warnings about technological dangers also come from science.&lt;/p&gt;
+&lt;blockquote&gt;实际上，操作的系统的多进程实现了多任务并发执行，程序的多线程实现了进程的并发执行。&lt;/blockquote&gt;
 
-&lt;p&gt;What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.&lt;/p&gt;
+&lt;h2 class=&quot;section-heading&quot;&gt;2):java中的多线程&lt;/h2&gt;
+&lt;h4 class=&quot;section-heading&quot;&gt;2.1):java线程的分类&lt;/h4&gt;
+&lt;p&gt;java中线程分为两类：用户线程和守护线程，当然java对于它们之间的转换提供了api的，就是setDaemon，它允许用户设置线程为守护线程，注意的是线程设置必须在线程start之前执行，不然会报错。那么守护线程和用户线程之间存在什么区别呢？&lt;/p&gt;
 
-&lt;p&gt;A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That&#39;s how I felt seeing the Earth for the first time. I could not help but love and cherish her.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;a）：用户线程的离开会对jvm关闭存在影响，而守护线程不会，就是说如果用户线程都执行完成了（不论此时是否还有守护线程），jvm则会关闭。
+&lt;/p&gt;
+&lt;p&gt;b）：在daemon线程中创建的线程也是daemon的，而在用户线程创建的线程则是用户线程。那么守护线程的作用是什么？我们可以把它类比于Android中的service，它主要的功能就是为其他线程提供服务，比如说垃圾回收线程是一个守护线程，它的作用就是处理其他线程产生的垃圾。
+&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.&lt;/p&gt;
+&lt;h4 class=&quot;section-heading&quot;&gt;2.2):java线程的创建&lt;/h4&gt;
+&lt;p&gt;在java中存在三种方式创建线程：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;a）：继承Thread类&lt;/p&gt;
+&lt;p&gt;b）：实现Runnable接口&lt;/p&gt;
+&lt;p&gt;c）：实现Callable接口&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;h2 class=&quot;section-heading&quot;&gt;The Final Frontier&lt;/h2&gt;
+&lt;p&gt;三者的区别在于：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;a）：a无法继承其他类&lt;/p&gt;
+&lt;p&gt;b）：b和c适合多个线程处理同一资源&lt;/p&gt;
+&lt;p&gt;c）：c存在线程返回结果以及抛出异常&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
-
-&lt;p&gt;There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.&lt;/p&gt;
-
-&lt;blockquote&gt;The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.&lt;/blockquote&gt;
-
-&lt;p&gt;Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.&lt;/p&gt;
-
-&lt;h2 class=&quot;section-heading&quot;&gt;Reaching for the Stars&lt;/h2&gt;
-
-&lt;p&gt;As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;#&quot;&gt;
-    &lt;img src=&quot;/img/post-sample-image.jpg&quot; alt=&quot;Post Sample Image&quot; /&gt;
-&lt;/a&gt;
-&lt;span class=&quot;caption text-muted&quot;&gt;To go places and do things that have never been done before – that’s what living is all about.&lt;/span&gt;&lt;/p&gt;
-
-&lt;p&gt;Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.&lt;/p&gt;
-
-&lt;p&gt;As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.&lt;/p&gt;
-
-&lt;p&gt;Placeholder text by &lt;a href=&quot;http://spaceipsum.com/&quot;&gt;Space Ipsum&lt;/a&gt;. Photographs by &lt;a href=&quot;https://www.flickr.com/photos/nasacommons/&quot;&gt;NASA on The Commons&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;线程的优先级：线程创建的优先级默认是和创建该线程的优先级一样（包括守护线程）,还真是验证了那句谚语“龙生龙，凤生凤，老鼠的儿子会打洞”&lt;/p&gt;
 </description>
         <pubDate>Tue, 08 Jul 2014 20:00:00 +0800</pubDate>
-        <link>https://zhou---jing.github.io/2014/07/08/failure-is-not-an-option/</link>
-        <guid isPermaLink="true">https://zhou---jing.github.io/2014/07/08/failure-is-not-an-option/</guid>
+        <link>https://zhou---jing.github.io/2014/07/08/thread-begin/</link>
+        <guid isPermaLink="true">https://zhou---jing.github.io/2014/07/08/thread-begin/</guid>
         
         
       </item>
@@ -228,7 +336,7 @@
     
       <item>
         <title>Hadoop的起源思想</title>
-        <description>&lt;p&gt;最近在看了下Hadoop，了解到Hadoop的起源的Lucene——一个实现全文搜索功能的开源软件，实现全文搜索功能在数据量不是很大的时候我们可以使用like进行数据库模糊查询，可是我们知道like的话则只能进行全文检索，这样的话如果对于大数据量则会是个灾难，此时的作者遇到和Google搜索引擎一样的困难——如何快速进行全文搜索。所幸的是，Google在几篇论文中向世界介绍了它的思想，不久之后，作者则根据Google的思想写出栏Hadoop。&lt;/p&gt;
+        <description>&lt;p&gt;最近在看了下Hadoop，了解到Hadoop的起源Lucene——一个实现全文搜索功能的开源项目在实现此项目功能时候所遇到的一些问题，实现全文搜索功能在数据量不是很大的时候我们可以使用like进行数据库模糊查询，可是我们知道like的话则只能进行全文检索而不能利用索引，这样的话如果对于大数据量则会是个灾难，此时的作者遇到和Google搜索引擎一样的困难——如何快速进行全文搜索。所幸的是，Google在几篇论文中向世界介绍了它的思想，不久之后，作者花费了两年时间根据Google的思想完成了该项目。&lt;/p&gt;
 
 &lt;h2 class=&quot;section-heading&quot;&gt;1:全文搜索遇到的问题&lt;/h2&gt;
 &lt;blockquote&gt;
@@ -238,10 +346,10 @@
 &lt;/blockquote&gt;
 
 &lt;h2 class=&quot;section-heading&quot;&gt;2:Google的解决方案&lt;/h2&gt;
-&lt;h5 class=&quot;section-heading&quot;&gt;2.1）大量网页如何存储&lt;/h5&gt;
+&lt;h4 class=&quot;section-heading&quot;&gt;2.1）大量网页如何存储&lt;/h4&gt;
 &lt;p&gt;众所周知，Google的搜索肯定需要处理大量的网页数据，而这些网页的存储所耗费的资源是非常巨大的，而Google作为一家非常有思想的公司，他们的思想就是将这些文件利用集群进行存储，每个节点存储部分数据，达到蚂蚁搬象的效果，这就是GFS。&lt;/p&gt;
 
-&lt;h5 class=&quot;section-heading&quot;&gt;2.2）全文搜索的搜索算法&lt;/h5&gt;
+&lt;h4 class=&quot;section-heading&quot;&gt;2.2）全文搜索的搜索算法&lt;/h4&gt;
 &lt;p&gt;对于大量网页的全文搜索，上面已经说到肯定不会使用Like进行查询，这时的Google则想出来了一个算法——倒排索引&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;#&quot;&gt;
     &lt;img src=&quot;/img/hadoop_orignal/daopao_suoyin.png&quot; alt=&quot;倒排索引&quot; /&gt;
@@ -249,7 +357,7 @@
 &lt;p&gt;它们的思想就是拿到一个网页之后对网页内容进行分词，每个词就是一个特征项，每个网页存在多个特征项，而每个特征项则会存在一个或者多个网页，然后我们根据特征项查找所有包含此特征项的网页，而且也能找到特征项在哪个位置。下面是一个示例，DocID是网页ID，TF是特征项在网页中的位置。&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;/img/hadoop_orignal/daopai_suoyin2.png&quot; alt=&quot;倒排索引&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h5 class=&quot;section-heading&quot;&gt;2.3）Page-Rank计算&lt;/h5&gt;
+&lt;h4 class=&quot;section-heading&quot;&gt;2.3）Page-Rank计算&lt;/h4&gt;
 &lt;p&gt;&lt;a href=&quot;#&quot;&gt;
     &lt;img src=&quot;/img/hadoop_orignal/page_rank1.png&quot; alt=&quot;Page_Rank&quot; /&gt;
 &lt;/a&gt;&lt;/p&gt;
@@ -276,7 +384,7 @@
 &lt;p&gt;二者相乘得到新的矩阵 ，然后再次进行迭代直到迭代多次（这个也是可以进行调整的），得到该结果。&lt;/p&gt;
 &lt;blockquote&gt;那么Google是如何进行对大量网页进行矩阵乘法的工作呢？&lt;/blockquote&gt;
 &lt;p&gt;他们的想法是让每个节点负责部分计算，比如说节点1负责第一、二列，那么此列和q0中第一、二个数进行相乘得到一个4*2的向量，代表的意思是1、2号网页对1、2、3、4号网页的PR分别贡献多少，节点2负责第三、四列，那么此列和q0中第三、四个数进行相乘得到一个4*2的向量 ，代表的意思是3、4号网页对1、2、3、4号网页的PR分别贡献多少，然后将结果同意发到一个节点，得到一个4*4的向量，对每行进行想加就是q1，然后再次进行迭代；上面的分任务就是Map过程，而将结果发到节点进行整合则为Reduce。&lt;/p&gt;
-&lt;p&gt;总的来说，Hadoop的很多思想都是从Google借鉴的，比如说BigTable（倒排索引中对关键字的以及网页的指向关系的存储），Map—Reduce就是Page-Rank算法中的思想，Hdfs则是GFS的改版。&lt;/p&gt;
+&lt;p&gt;总的来说，Hadoop的很多思想都是从Google借鉴的，比如说BigTable（倒排索引中对关键字的以及网页的指向关系的存储，其实就是列式数据库），Map—Reduce就是Page-Rank算法中的思想，Hdfs则是GFS的山寨版。&lt;/p&gt;
 &lt;/current&gt;&lt;/next&gt;&lt;/current&gt;&lt;/next&gt;&lt;/p&gt;
 </description>
         <pubDate>Tue, 10 Jun 2014 20:00:00 +0800</pubDate>

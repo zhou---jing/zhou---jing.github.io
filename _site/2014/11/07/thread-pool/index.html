@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="无愧过往  无畏将来">
+
+    <title>JAVA多线程 - zhoujing的博客</title>
+
+    <link rel="canonical" href="https://zhou---jing.github.io/2014/11/07/thread-pool/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/clean-blog.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+ -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">zhoujing的博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">主页</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/post-bg-02.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>JAVA多线程</h1>
+                    
+                    <h2 class="subheading">Java线程池</h2>
+                    
+                    <span class="meta">Posted by zhou---jing on November 7, 2014</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<h2 class="section-heading">1):线程池的出现</h2>
+
+<div>我们知道多线程技术的作用大致分为三个方面：</div>
+
+<blockquote>
+<p>a）:异步调用，避免阻塞</p>
+<p>b）:避免CPU空转，IO等请求时线程阻塞</p>
+<p>c）:提高CPU的利用率（对于多核来说）</p>
+</blockquote>
+
+<div>那么我们是不是尽量多创建线程呢？我想我们都会回答“不是”，因为我们都知道“物极必反”，那么多创建线程存在什么问题呢？</div>
+
+<blockquote>
+	<p>a）:JAVA每个线程大约占用内存1M，创建多的线程则相对而言程序可用内存则减少</p>
+	<p>b）:线程同步是个很大的问题</p>
+	<p>c）:线程的创建和销毁是很占资源的</p>
+	<p>d）:CPU在线程之间切换导致CPU利用率下降</p>
+</blockquote>
+
+<p>那么我们如果对并发真的需要这么多的线程呢？我们就没有办法了吗？回答当然不是，我们可以使用“线程池”，简单来说，线程池就是一个线程的池子，我们需要线程的时候就可以直接问它要，不用的时候则把线程返回给它，从而达到一种线程的重复利用。</p>
+
+<h2 class="section-heading">2):线程池的JAVA API</h2>
+
+<div>下面我们来看下JAVA提供了哪些API封装了线程池相关的操作：</div>
+
+<p><a href="#">
+    <img src="/img/thread_poll/thread-poll1.png" alt="线程池" />
+</a></p>
+
+<div>
+	<ol>
+	<li>Callable：不用介绍了，在线程创建的时候已经介绍了一部分</li>
+	<li>Future：Future为线程的执行结果票据，可以同步Futrue获取到异步线程的结果</li>
+	<li>ExecutorService：线程池的接口，其中execute和submit都是执行线程的接口，但是看返回值就知道它们的区别了，execute只是执行Runable，而submit则提交的任务可以有返回结果，submit会将runnable 物件包装成FutureTask,其run方法会捕捉被包装的Runnable Object的run方法抛出的Throwable异常，待submit方法所返回的的Future Object调用get方法时，将执行任务时捕获的Throwable Object包装成java.util.concurrent.ExecutionException来抛出</li>
+	<li>ScheduledExecutorService：重复执行任务类型的接口</li>
+	<li>ThreadPoolExecutor：ExecutorService的实现</li>
+	<li>SchedudedThreadPoolExecutor：SchedudedExecutorService的实现</li>
+	<li>ExecutorCompletionService：ExecutorCompletionService是CompletionService的实现类，ExecutorCompletionService和AbstractExcutorService者之间的区别在于ExecutorCompletionService会提供一个方法take（）来获取当前线程池中已经完成的Futrue对象，注意是已经完成了的，take方法相当于是生产者-消费者的消费者，如果没有已经完成的任务时候则take方法阻塞，而 AbstractExcutorService中的Futrue对象并不能保证是完成的，所以会造成通过Futrue来获取结果的时候将会造成阻塞。那么上面的区别会有什么区别呢？我们来看下一个应用场景就知道了。我们一般对多任务提交之后将会对Futrue对象进行保存（List），然后再主线程之中对该List进行便利获取结果值，而如果此时中间某一个结果并没有返回，那么则会造成后面已经完成的任务进行等待，浪费了返回时间，而如果通过take方法获取的Future对象一定是返回了结果的，所以可以直接进行操作，如果没有返回结果则只会阻塞该take方法。<br />
+	<a href="#">
+	    <img src="/img/thread_poll/thread-poll2.png" alt="线程池" />
+	</a>
+	</li>
+	</ol>
+</div>
+
+<h2 class="section-heading">3):线程池的配置</h2>
+
+<div>简单看了下API，现在我们学习下该如何创建线程池：</div>
+
+<div>
+	<ol>
+		<li>newFixedThreadPool：创建固定大小的线程，但是是每次提交一个任务则创建一个直到最大的线程数，如果线程因为异常而退出，则会新补充线程</li>
+		<li>newSingleThreadExecutor：一个线程的线程池，和上面的描述基本一样，除了最大的线程数是1以外</li>
+		<li>newCachedThreadPool：创建一个可缓存的线程池。如果线程池的大小超过了处理任务所需要的线程，那么就会回收部分空闲（60秒不执行任务）的线程，当任务数增加时，此线程池又可以智能的添加新线程来处理任务。此线程池不会对线程池大小做限制，线程池大小完全依赖于操作系统（或者说JVM）能够创建的最大线程大小</li>
+		<li>newSingleThreadScheduledExecutor：创建一个单线程的线程池。此线程池支持定时以及周期性执行务的需求</li>
+		<li>newScheduledThreadPool：创建一个大小无限的线程池。此线程池支持定时以及周期性执行任务的需求</li>
+	</ol>
+</div>
+
+<div>其实JAVA推荐我们使用上面的方法来创建线程池，但是其实最终的线程池的构造函数都是</div>
+
+<p><a href="#">
+    <img src="/img/thread_poll/thread-poll4.png" alt="线程池" />
+</a></p>
+
+<div>我们来看下参数的含义：</div>
+
+<div>
+	<ol>
+		<li>corePoolSize - 池中所保存的线程数，包括空闲线程</li>
+		<li>maximumPoolSize-池中允许的最大线程数</li>
+		<li>keepAliveTime - 当线程数大于核心时，此为终止前多余的空闲线程等待新任务的最长时间</li>
+		<li>unit - keepAliveTime 参数的时间单位</li>
+		<li>workQueue - 执行前用于保持任务的队列。此队列仅保持由 execute方法提交的 Runnable任务</li>
+		<li>threadFactory - 执行程序创建新线程时使用的工厂</li>
+		<li>handler - 由于超出线程范围和队列容量而使执行被阻塞时所使用的处理程序</li>
+	</ol>
+</div>
+
+<blockquote>
+	1）当池子大小小于corePoolSize就新建线程，并处理请求<br />
+	2）当池子大小等于corePoolSize，把请求放入workQueue中，池子里的空闲线程就去从workQueue中取任务并处理<br />
+	3）当workQueue放不下新入的任务时，新建线程入池，并处理请求，如果池子大小撑到了maximumPoolSize就用RejectedExecutionHandler来做拒绝处理<br />
+	4）另外，当池子的线程数大于corePoolSize的时候，多余的线程会等待keepAliveTime长的时间，如果无请求可处理就自行销毁。<br />
+</blockquote>
+
+<div>通过上面的参数，我们可以类比下现实生活中的场景——工厂</div>
+
+<div>如果工厂中的工人数小于corePoolSize，当有任务来的时候老板会再请工人进行处理任务（这是好老板），当工人的数刚超过corePoolSize的时候，老板会把任务放在workQueue等着工人完成任务后再进行处理（这是普通老板），如果此时还有任务而且workQueue放不下了（因为可能是定长的或者是无缓冲的Qunue）的话，则老板就会再借几个工人（辅助线程），如果此时工人们可以忙得过来还存在空闲的人，那么等keepAliverTime这么多时间的空闲工人还回去，如果还是忙不过来，则老板将会拒绝次任务。</div>
+
+<h2 class="section-heading">4):线程池创建内部实现思路</h2>
+
+<div>在说各个方法对线程池的定制之前，我们需要先来了解下我们所需要的关于BlockingQueue的基础知识，顾名思义BlockingQueue是阻塞队列，它就是在Queue的基础上加上了两个二外的操作: 获取元素时等待队列变为非空，以及存储元素时等待空间变得可用。那这个有什么用呢？还记得我们生产者—消费者模型中仓库的实现吗？在那部分我们自己要控制临界状态，进行线程的wait以及唤醒，但是现在BlockingQueue已经帮我们把这些给实现了。他其中的put方法会阻塞线程，直到BlockingQueue没有满的时候，take方法阻塞线程直到BlockingQueue为非空的时候。</div>
+
+<p><a href="#">
+    <img src="/img/thread_poll/thread-poll5.png" alt="线程池" />
+</a></p>
+
+<div>
+	<ol>
+		<li>ArrayBlockingQueue：顾名思义，通过Array来实现阻塞队列，通过维护一个定长数组来实现上述的需求，在take的时候等待ArrayBlockingQueue不为空，在put的时候直到ArrayBlockingQueue长度小于数组的长度，除了一个定长数组外，ArrayBlockingQueue内部还保存着两个整形变量，分别标识着队列的头部和尾部在数组中的位置</li>
+		<li>LinkedBlockingQueue：顾名思义即使通过Node来实现的，它也可以设置定长也可以是无限大，它和ArrayBlockingQueue的区别主要在于以下的方面：<br />
+		A）	ArrayBlockingQueue在生产者放入数据和消费者获取数据，都是共用同一个锁对象，由此也意味着两者无法真正并行运行；<br />
+		B）	ArrayBlockingQueue在插入或删除元素时不会产生或销毁任何额外的对象实例（刚才说了它还有两个位置坐标的变量），而后者则会生成一个额外的Node对象</li>
+		<li>SynchronousQueue： SynchronousQueue是无界的，是一种无缓冲的等待队列，但是由于该Queue本身的特性，在某次添加元素后必须等待其他线程取走后才能继续添加；可以认为SynchronousQueue是一个缓存值为1的阻塞队列，但是 isEmpty()方法永远返回是true，remainingCapacity() 方法永远返回是0，remove()和removeAll() 方法永远返回是false，iterator()方法永远返回空，peek()方法永远返回null</li>
+		<li>handler - 由于超出线程范围和队列容量而使执行被阻塞时所使用的处理程序</li>
+	</ol>
+</div>
+
+<p><a href="#">
+    <img src="/img/thread_poll/thread-poll6.png" alt="线程池" />
+</a></p>
+
+<p>看完了上面BlockingQunue的实现类之后，我们接着看Executors如何对线程池进行定制的：</p>
+
+<div>newFixedThreadPool：我们来看下这个方法是如何对线程池来定制的从而实现固定大小的线程池；</div>
+<p><a href="#">
+    <img src="/img/thread_poll/thread-poll7.png" alt="线程池" />
+</a></p>
+<p>固定大小的线程池的核心数和最大线程数是一样的，则只会存在coolPoolSize完成任务，完成不了的放在无限队列里面；排队方式采用无界队列;</p>
+
+<div>newSingleThreadExecutor：大小为1的固定线程池:</div>
+<p><a href="#">
+    <img src="/img/thread_poll/thread-poll8.png" alt="线程池" />
+</a></p>
+
+<div>newCachedThreadPool：创建一个可根据需要创建新线程的线程池（相当于都是借来的工人）；</div>
+<p><a href="#">
+    <img src="/img/thread_poll/thread-poll9.png" alt="线程池" />
+</a></p>
+<p>coolPoolSize：核心数为0，而最大数为无限的，在60s空闲后将会进行线程回收，使用的队列是SynchronousQueue，并且它的排队方式是直接提交;</p>
+
+<div>newScheduledThreadPool：创建一个大小无限的线程池。此线程池支持定时以及周期性执行任务的需求：</div>
+<p><a href="#">
+    <img src="/img/thread_poll/thread-poll10.png" alt="线程池" />
+</a></p>
+<div>核心数是corePoolSize，最大值是无限，此时将不会借工人，因为归还时间是0，即相当于没有借，而队列是无界延迟阻塞队列DelayedWorkQueue。</div>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2014/09/24/thread-callback/" data-toggle="tooltip" data-placement="top" title="JAVA多线程">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+	<!-- 多说评论框 start -->
+   	<!--<div class="ds-thread col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1" data-thread-key=/2014/11/07/thread-pool data-title=JAVA多线程 data-url="zhou---jing.github.io/2014/11/07/thread-pool/"></div>-->
+    	<!-- 多说评论框 end -->
+    </div>
+</article>
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+	var duoshuoQuery = {short_name:"zhou---jing"};
+	    (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	    })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/zhou---jing">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; zhoujing的博客 2015</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+
+</body>
+
+</html>

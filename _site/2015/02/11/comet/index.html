@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="无愧过往  无畏将来">
+
+    <title>关于推送的一些事 - zhoujing的博客</title>
+
+    <link rel="canonical" href="https://zhou---jing.github.io/2015/02/11/comet/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/clean-blog.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+ -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">zhoujing的博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">主页</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<header class="intro-header" style="background-image: url('/img/post-bg-05.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>关于推送的一些事</h1>
+                    
+                    <span class="meta">Posted by zhou---jing on February 11, 2015</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<div>还想起在去年在实验室的时候，看项目中实现推送的方式就是Ajax轮训，然后慢慢才了解到服务端推送技术，然而项目中接触了Android之后一直以为Android和web的推送都是差不多的，直到最近才发现二者之间的联系以及区别：</div>
+
+<blockquote>
+<p>a）:区别：web端走的是Http协议，而Android推送则是基于 Socket，二者在OSI模型上处于不同的位置</p>
+<p>b）:联系：Web端长连接推送基于Socket长连接，因为http协议是基于tcp/ip协议，而Socket则是tcp/ip的封装；</p>
+</blockquote>
+
+<div>我们都知道Http是无状态的，那么对于服务端推送来说一个很大的问题是“我该如何直到向哪个客户端推送呢？”，现在基本存在三种方式：</div>
+
+<blockquote>
+	<p>a）:基于客户端套接字的推送</p>
+	<p>b）:基于长连接的推送实现</p>
+	<p>c）:HTML5的推送实现</p>
+</blockquote>
+
+<div>基于客户端套接字的推送，现在也主要存在三种方式：</div>
+
+<div>1）基于Flash</div>
+<div>在浏览器安装了Flash之后，我们就可以使用Flash提供的套接字来进行推送，在AS中存在对于套接字的API，并且AS和js之间可以相互调用，所以说基于Flash的推送是可以实现的，但是缺点是很明显的——需要Flash插件;</div>
+
+<div>2）基于Applet</div>
+<div>在浏览器安装jre之后，我们也可以使用applet实现一个与服务器进行socket连接的客户端，然后同步此客户端实现和服务器通讯，从而达到服务器推的效果，并且applet也是可以操作js的，但是缺点是也是需要运行环境jre；</div>
+<p></p>
+<div>基于长连接或者类似长连接的推送实现，现在也主要存在三种方式：</div>
+<div>1）基于iframe</div>
+<div>在早期的版本，我们可以通过iframe中指定src，而src是一直都没有返回的，而http连接在没有返回的时候是不会进行关闭此连接，所以相当于此连接是个长连接，而我们在后台则可以根据这个这个连接的response来一直输出内容；当然这种方式的缺点在于对于服务器和客户端的资源占用比较严重，目前来说，浏览器对于长连接存在个数限制的，而这个链接会一直占用浏览器资源，更严重的是它需要在后台为每个长连接启动一个线程，这种方式对于服务器的资源占用是相当严重的；</div>
+
+<div>2）Ajax长轮询</div>
+<div>Ajax的出现让我们实现了异步请求，自此之后Ajax基本成了网站的“常客”，我们基本都会使用Ajax进行异步请求，而我们待会要说的就是和Ajax相关的，在上面所说的方式中，长连接是一直和服务器保持连接的，这样的话对于服务器的资源是很大的浪费，所以我们想只要在一次请求之前的连接是畅通的是可以了，所以就出现了Ajax长轮询的一种方式：简单来说，就是通过Ajax发送请求，然后在回调函数中再次发送请求，从而达到一种循环的结果，当然我们的消息可以放在后台的队列中，如果当前没有消息的话则关闭该连接，返回结果之后再次请求；</div>
+
+<div>3）Http长连接</div>
+<div>这个问题我们可以通过Http长连接来解决，在Http协议里面我们看下长连接该如何设置：在HTTP/1.0版本中，并没有官方的标准来规定Keep-Alive如何工作，因此实际上它是被附加到HTTP/1.0协议上，如果客户端浏览器支持Keep-Alive，那么就在HTTP请求头中添加一个字段 Connection: Keep-Alive， 当服务器收到附带有Connection: Keep-Alive的请求时，它也会在响应头中添加一个同样的字段来使用Keep-Alive。这样一来，客户端和服务器之间的HTTP连接就会被保持，不会断开（超过Keep-Alive规定的时间，意外断电等情况除外），当客户端发送另外一个请求时，就使用这条已经建立的连接,在HTTP/1.1版本中，官方规定的Keep-Alive使用标准和在HTTP/1.0版本中有些不同，默认情况下所在HTTP1.1中所有连接都被保持，除非在请求头或响应头中指明要关闭：Connection: Close  ，这也就是为什么Connection: Keep-Alive字段再没有意义的原因。另外，还添加了一个新的字段Keep-Alive:，因为这个字段并没有详细描述用来做什么，可忽略它；</div>
+
+<div>客户端代码如下：</div>
+<pre><code>&lt;%@ page language="java" import="java.util.*" pageEncoding="utf-8"%&gt;
+&lt;%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;base href="&lt;%=basePath%&gt;"&gt;
+    &lt;title&gt;My JSP 'index.jsp' starting page&lt;/title&gt;
+	&lt;meta http-equiv="pragma" content="no-cache"&gt;
+	&lt;meta http-equiv="cache-control" content="no-cache"&gt;
+	&lt;meta http-equiv="expires" content="0"&gt;    
+	&lt;meta http-equiv="keywords" content="keyword1,keyword2,keyword3"&gt;
+	&lt;meta http-equiv="description" content="This is my page"&gt;
+	&lt;script type="text/javascript" src="js/comet4j.js"&gt;&lt;/script&gt;
+	&lt;script type="text/javascript" src="http://code.jquery.com/jquery-1.11.2.min.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+  &lt;body&gt;
+  	&lt;button id="start" onclick="start();"&gt;开始上线&lt;/button&gt;
+  	&lt;button id="stop" onclick="stop();"&gt;下线&lt;/button&gt;
+  	&lt;div id="group" style="width:450px;height:400px;border:1px solid #000;"&gt;&lt;/div&gt;
+  	&lt;input type="text" id="chart" style="width:400px;"/&gt;
+  	&lt;input type="button" onclick="onchart();" value="发送" id="chart"/&gt;
+  	&lt;script type="text/javascript"&gt;
+		var group = $("#group");
+		var chart = $("#chart");
+		function start(){
+			JS.Engine.start('/Comet/conn');
+		}
+		function stop(){
+			JS.Engine.stop();
+		}
+		function onchart(){
+			var text=chart.val();
+			$.post("&lt;%=basePath%&gt;chart",{"content":text},function(result){
+				//group.html(group.html()+"&lt;br /&gt;"+text);
+			});
+		}
+		JS.Engine.on({
+		    start : function(cId, channelList, engine){
+		      alert('连接已建立，连接ID为：' + cId);
+		    },
+		    stop : function(cause, cId, url, engine){
+		      alert('连接已断开，连接ID为：' + cId + ',断开原因：' + cause + ',断开的连接地址：'+ url);
+		    },
+			single : function(text){
+				alert(text);
+			},
+			group : function(text){
+				group.html(group.html()+"&lt;br /&gt;"+text);
+			}
+		});
+	&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<div>监听容器的启动并且注册通道，监听客户端上线，上线的话则通过服务器单推给客户端一条上线通知：</div>
+<pre><code>package com.example.listener;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+import org.comet4j.core.CometConnection;
+import org.comet4j.core.CometContext;
+import org.comet4j.core.CometEngine;
+import org.comet4j.core.event.ConnectEvent;
+import org.comet4j.core.listener.ConnectListener;
+
+import com.example.manager.Manger;
+
+public class ContextListener implements ServletContextListener {
+	public static final String DIANTODIAN = "single";//点对点
+	public static final String GROUPCHART = "group";	//群聊
+	@Override
+	public void contextDestroyed(ServletContextEvent arg0) {
+	}
+	@Override
+	public void contextInitialized(ServletContextEvent arg0) {
+		CometContext cc = CometContext.getInstance();
+		cc.registChannel(DIANTODIAN);
+		cc.registChannel(GROUPCHART);
+		CometEngine engine = CometContext.getInstance().getEngine();
+		engine.addConnectListener(new JoinListener());
+	}
+}
+class JoinListener extends ConnectListener {
+	@Override
+	public boolean handleEvent(ConnectEvent arg0) {
+		CometConnection conn = arg0.getConn();
+		System.out.println(conn.getClientIp()+"已上线");
+		CometContext.getInstance().getEngine().sendTo(ContextListener.DIANTODIAN, conn, "欢迎上线");
+		Manger.addClient(conn);
+		return true;
+	}
+}
+</code></pre>
+
+<div>群聊实现：</div>
+<pre><code>package com.example.servlet;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.comet4j.core.CometContext;
+import com.example.listener.ContextListener;
+
+public class ChartServlet extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		String contentString=req.getParameter("content");
+		CometContext.getInstance().getEngine().sendToAll(ContextListener.GROUPCHART, contentString);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		doGet(req, resp);
+	}
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+}
+</code></pre>
+
+<div>HTML5中WebSocket的实现：</div>
+<div>1）HTML5一经推出就有“统一天下”之势，其中的HTML5的很多新特性功不可没，包括localStorage、WebSocket、Worker等等，相信在不久之后，很多技术会因这些特性而越来越简单，当然包括推送:</div>
+<div>客户端实现:</div>
+<pre><code>&lt;%@ page language="java" import="java.util.*" pageEncoding="utf-8"%&gt;
+&lt;%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://"
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%&gt;
+&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+	&lt;head&gt;
+	&lt;base href="&lt;%=basePath%&gt;"&gt;
+	
+	&lt;title&gt;My JSP 'index.jsp' starting page&lt;/title&gt;
+	&lt;meta http-equiv="pragma" content="no-cache"&gt;
+	&lt;meta http-equiv="cache-control" content="no-cache"&gt;
+	&lt;meta http-equiv="expires" content="0"&gt;
+	&lt;meta http-equiv="keywords" content="keyword1,keyword2,keyword3"&gt;
+	&lt;meta http-equiv="description" content="This is my page"&gt;
+	&lt;script type="text/javascript"
+		src="http://code.jquery.com/jquery-1.11.2.min.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;script type="text/javascript"&gt;
+	var ws = null;
+	var group;
+	var chart;
+	$(function(){
+		group = $("#group");
+		chart = $("#chart");
+	});
+	
+	function start() {
+		ws = new WebSocket("ws://localhost:8080/WebSocket/chart");
+		ws.onopen = function() {
+			alert("连接成功");
+		};
+		ws.onmessage = function(evt) {
+			console.info(group.html()+evt.data);
+			group.html(group.html()+"&lt;br /&gt;"+evt.data);
+		};
+		ws.onclose = function(evt) {
+			alert("WebSocketClosed!");
+		};
+		ws.onerror = function(evt) {
+			alert("WebSocketError!");
+		};
+	}		
+
+	function onchart() {
+		if (ws != null) {
+			var text = chart.val();
+			ws.send(text);
+		}
+	}
+	
+	function stop(){
+		if(ws!=null){
+			ws.close();
+		}
+	}
+&lt;/script&gt;
+&lt;body&gt;
+	&lt;input type="button" value="上线" onclick="start();" /&gt;  &lt;input type="button" value="下线" onclick="stop();" /&gt;
+	&lt;div id="group" style="width:450px;height:400px;border:1px solid #000;"&gt;&lt;/div&gt;
+	&lt;input type="text" id="chart" style="width:400px;"/&gt;
+	&lt;input type="button" onclick="onchart();" value="发送"&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<div>服务端实现：</div>
+<pre><code>package com.zj.server;
+import java.io.IOException;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.websocket.*;
+import javax.websocket.server.ServerEndpoint;
+@ServerEndpoint(value="/chart")
+//用了这个之后，你的服务地址为ws://localhost:port/projectName/chat01
+public class ChartServlet {
+  private static final AtomicInteger connectionIds = new AtomicInteger(0);
+  private static final Set&lt;ChartServlet&gt; connections =
+          new CopyOnWriteArraySet&lt;ChartServlet&gt;();
+  private final String nickname;
+  private Session session;
+  public ChartServlet() {
+      nickname = "游客ID：" + connectionIds.getAndIncrement();
+  }
+  @OnOpen
+  public void start(Session session) {
+      this.session = session;connections.add(this);
+      String message = String.format("嗨嗨，姑娘们，来接客了： %s %s", nickname, "has joined.");broadcast(message);
+  }
+  @OnClose
+  public void end() {
+      connections.remove(this);
+      String message = String.format("客官慢走，嘿嘿，还没付钱呢： %s %s",
+              nickname, "has disconnected.");broadcast(message);
+  }
+ @OnMessage
+ public void receive(String message) {
+	String filteredMessage = String.format("您有新消息：%s: %s", nickname,
+			message.toString());broadcast(filteredMessage);
+ }
+
+	private static void broadcast(String msg) {
+		for (ChartServlet client : connections) {
+			try {
+				client.session.getBasicRemote().sendText(msg);
+			} catch (IOException e) {
+				connections.remove(client);
+				try {
+					client.session.close();
+				} catch (IOException e1) {
+				}
+				String message = String.format("* %s %s", client.nickname,
+						"has been disconnected.");
+				broadcast(message);
+			}
+		}
+	}
+}
+</code></pre>
+
+<div>总结来说，上面的一些方式对于规模比较小的消息推送还是可行的，但是对于大规模的消息服务肯定是不可行的，所以我们很容易联系到集群的实现，实现集群方式的推送服务又该如何设计？后面可以想想。</div>
+
+
+                <hr>
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2014/11/07/thread-pool/" data-toggle="tooltip" data-placement="top" title="JAVA多线程">&larr; 上一篇</a>
+                    </li>
+                    
+                    
+                </ul>
+
+            </div>
+        </div>
+	<!-- 多说评论框 start -->
+   	<!--<div class="ds-thread col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1" data-thread-key=/2015/02/11/comet data-title=关于推送的一些事 data-url="zhou---jing.github.io/2015/02/11/comet/"></div>-->
+    	<!-- 多说评论框 end -->
+    </div>
+</article>
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+	var duoshuoQuery = {short_name:"zhou---jing"};
+	    (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	    })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/zhou---jing">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; zhoujing的博客 2015</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+
+</body>
+
+</html>
